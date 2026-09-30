@@ -1,0 +1,780 @@
+<div class="min-h-screen w-full bg-gray-100 md:flex">
+
+  <!-- MOBILE TOP BAR -->
+  <div class="md:hidden sticky top-0 z-40 bg-white shadow-sm px-4 py-3 flex items-center justify-between">
+    <button type="button" class="w-10 h-10 flex items-center justify-center rounded-lg border text-gray-700"
+      (click)="sidebarOpen = true">
+      <i class="pi pi-bars"></i>
+    </button>
+
+    <h1 class="text-base font-bold text-gray-800 pl-4 sm:pl-2">
+      Manager Dashboard
+      @if (env.includes('ty-north')) {
+      Toyota
+      }
+      @if (env.includes('ty-south')) {
+      Toyota
+      }
+    </h1>
+
+    <div class="w-10"></div>
+  </div>
+
+  <!-- OVERLAY MOBILE -->
+  <div *ngIf="sidebarOpen" class="fixed inset-0 bg-black/40 z-40 md:hidden" (click)="sidebarOpen = false">
+  </div>
+
+  <!-- SIDEBAR -->
+  <!-- OVERLAY MOBILE -->
+  <div *ngIf="sidebarOpen" class="fixed inset-0 bg-black/40 z-40 md:hidden" (click)="sidebarOpen = false">
+  </div>
+
+
+
+  <!-- SIDEBAR -->
+  <aside class="
+    fixed md:static inset-y-0 left-0 z-50
+    bg-white shadow-md
+    flex flex-col justify-between
+    transform transition-all duration-300 ease-in-out
+    overflow-hidden
+    w-80
+  " [ngClass]="{
+
+
+    'translate-x-0 w-[88vw] max-w-[22rem]': sidebarOpen,
+    '-translate-x-full w-[88vw] max-w-[22rem]': !sidebarOpen,
+
+
+    'md:translate-x-0 md:w-64': desktopSidebarVisible,
+    'md:hidden': !desktopSidebarVisible
+
+  }">
+
+    <!-- TOP -->
+    <div>
+
+      <!-- HEADER -->
+      <div class="flex items-center justify-between border-b p-4">
+
+        <!-- LOGOS -->
+        @if (env.includes('ty') ) {
+
+        <div class="flex items-center gap-3">
+          <img class="h-10 object-contain" src="logo-daltonb.png">
+          <img class="h-10 object-contain" src="toyota-logo.png">
+        </div>
+
+        } @else {
+
+        <div class="flex items-center gap-3">
+          <img class="h-10 object-contain" src="logo-daltonb.png">
+          <img class="h-10 object-contain" src="subaru-logo.png">
+        </div>
+
+        }
+
+        <!-- MOBILE CLOSE -->
+        <button type="button" class="md:hidden w-9 h-9 flex items-center justify-center rounded-lg border text-gray-700"
+          (click)="sidebarOpen = false">
+
+          <i class="pi pi-times"></i>
+
+        </button>
+
+      </div>
+
+      <!-- MENU -->
+      <nav class="p-4 space-y-2">
+
+        <!-- LIVE -->
+        <div class="flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer hover:bg-gray-100 transition"
+          (click)="selectTab('LIVE')" [ngClass]="{
+          'bg-blue-50 text-red-600 font-semibold': currentTab === 'LIVE'
+        }">
+
+          <i class="pi pi-video"></i>
+
+          <span>
+            Live View
+          </span>
+
+        </div>
+
+        <!-- SETTINGS -->
+        @if (!env.includes('ty') ) {
+
+        <div class="flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer hover:bg-gray-100 transition"
+          (click)="selectTab('SETTINGS')" [ngClass]="{
+          'bg-blue-50 text-red-600 font-semibold': currentTab === 'SETTINGS'
+        }">
+
+          <i class="pi pi-cog"></i>
+
+          <span>
+            Settings
+          </span>
+
+        </div>
+
+        }
+
+        <!-- SALESPEOPLE -->
+        <div class="flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer hover:bg-gray-100 transition"
+          (click)="selectTab('SALESPEOPLE')" [ngClass]="{
+          'bg-blue-50 text-red-600 font-semibold': currentTab === 'SALESPEOPLE'
+        }">
+
+          <i class="pi pi-users"></i>
+
+          <span>
+            Salespeople
+          </span>
+
+        </div>
+
+        <!-- REPORTS -->
+        <div class="flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer hover:bg-gray-100 transition"
+          (click)="selectTab('REPORTS')" [ngClass]="{
+          'bg-blue-50 text-red-600 font-semibold': currentTab === 'REPORTS'
+        }">
+
+          <i class="pi pi-chart-line"></i>
+
+          <span>
+            Reports
+          </span>
+
+        </div>
+
+        <!-- AREAS -->
+        @if (env.includes('ty') || env.includes('')) {
+
+        <div class="flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer hover:bg-gray-100 transition"
+          (click)="selectTab('AREAS')" [ngClass]="{
+          'bg-blue-50 text-red-600 font-semibold': currentTab === 'AREAS'
+        }">
+
+          <i class="pi pi-building"></i>
+
+          <span>
+            Areas
+          </span>
+
+        </div>
+
+        }
+
+        <!-- SALES CALENDAR -->
+        @if (env.includes('ty') || env.includes('')) {
+
+        <div class="flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer hover:bg-gray-100 transition"
+          (click)="selectTab('SALES_CALENDAR')" [ngClass]="{
+          'bg-blue-50 text-red-600 font-semibold': currentTab === 'SALES_CALENDAR'
+        }">
+
+          <i class="pi pi-calendar"></i>
+
+          <span>
+            Sales Calendar
+          </span>
+
+        </div>
+
+        }
+
+      </nav>
+
+    </div>
+
+    <!-- USER + LOGOUT -->
+    <div class="border-t">
+
+      <!-- USER -->
+      <div class="p-4 flex items-center gap-3">
+
+        <img class="w-10 h-10 rounded-full object-cover border shrink-0"
+          [src]="userAdmin?.avatar_url || 'https://picsum.photos/40'" alt="User Avatar">
+
+        <div class="min-w-0">
+
+          <div class="font-medium text-gray-700 truncate">
+            {{ userAdmin?.name || name }}
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- LOGOUT -->
+      <div class="p-4 pt-0">
+
+        <button (click)="logout()" class="
+          w-full flex items-center justify-center gap-2
+          px-4 py-2
+          border border-red-500 text-red-600
+          rounded-lg hover:bg-red-50
+          transition cursor-pointer
+        ">
+
+          <i class="pi pi-sign-out"></i>
+
+          <span>
+            Logout
+          </span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </aside>
+
+
+
+  <!-- MAIN CONTENT -->
+  <main class="flex-1 p-4 sm:p-6 md:p-10 overflow-y-auto min-w-0 transition-all duration-300">
+
+    <div class="hidden md:flex items-center gap-4 mb-6">
+
+      <!-- DESKTOP SIDEBAR TOGGLE -->
+      <button type="button" class="
+      w-10 h-10 flex items-center justify-center
+      bg-white border shadow-sm rounded-lg
+      text-gray-700 hover:bg-gray-100
+      transition shrink-0
+    " (click)="toggleDesktopSidebar()">
+
+        <i class="pi" [ngClass]="desktopSidebarVisible ? 'pi-angle-left' : 'pi-angle-right'">
+        </i>
+
+      </button>
+
+      <!-- TITLE -->
+      <h1 class="text-3xl font-bold text-gray-800 leading-none">
+
+        Manager Dashboard
+
+        @if (env.includes('ty-north')) {
+        Toyota
+        }
+
+        @if (env.includes('ty-south')) {
+        Toyota
+        }
+
+      </h1>
+
+    </div>
+
+
+
+
+    <!-- LIVE FLOOR TAB -->
+    <div *ngIf="currentTab=='LIVE'">
+      @if (env.includes('ty') ) {
+      <app-live-floor-secondary></app-live-floor-secondary>
+      } @else {
+      <app-live-floor></app-live-floor>
+      }
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div *ngIf="currentTab=='SETTINGS'">
+
+      <div class="max-w-xl bg-white rounded-xl shadow-md p-8">
+
+        <h2 class="text-xl font-semibold mb-2">
+          General Settings
+        </h2>
+
+        <p class="text-gray-500 mb-6">
+          Configure the core mechanics of the sales floor rotation.
+        </p>
+
+        <div class="space-y-4">
+
+          <div>
+            <label class="font-medium">
+              Sales Floor Time (minutes)
+            </label>
+
+            <input type="number" class="w-full border rounded-lg p-2 mt-1"
+              [value]="getSetting('shift_duration_minutes')" [(ngModel)]="shift_duration_minutes_value">
+
+            <p class="text-sm text-gray-500">
+              The amount of time each salesperson spends on the sales floor per turn.
+            </p>
+          </div>
+
+
+          <div>
+            <label class="font-medium">
+              Extra Time (minutes)
+            </label>
+
+            <input type="number" class="w-full border rounded-lg p-2 mt-1" [value]="getSetting('extra_time_minutes')"
+              [(ngModel)]="extra_time_minutes_value">
+
+            <p class="text-sm text-gray-500">
+              The amount of extra time a salesperson can request.
+            </p>
+          </div>
+
+        </div>
+
+        <button (click)="updateSettings()" [disabled]!="settingsLoaded"
+          class="mt-6 flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer">
+          <i class="pi pi-save"></i>
+          Save Settings
+        </button>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- SALESPEOPLE TAB -->
+    <div *ngIf="currentTab=='SALESPEOPLE'">
+
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+        <!-- ADD -->
+        <div class="bg-white rounded-xl shadow-md p-6">
+
+          <h2 class="text-lg font-semibold mb-2 flex items-center gap-2">
+            <i class="pi pi-user-plus"></i>
+            Add New Salesperson
+          </h2>
+
+          <p class="text-gray-500 mb-4">
+            Register a new salesperson to the system.
+          </p>
+
+
+          <div class="flex flex-col gap-2">
+            <input type="text" placeholder="e.g. John Doe" class="border rounded-lg p-2"
+              [(ngModel)]="newSalespersonName">
+            <input type="email" placeholder="e.g. john@example.com" class="border rounded-lg p-2"
+              [(ngModel)]="newSalespersonEmail">
+            <button
+              class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer mt-2"
+              (click)="addSalesperson()">
+              <i class="pi pi-plus"></i>
+              Add
+            </button>
+          </div>
+
+        </div>
+
+
+
+        <!-- MANAGE -->
+        <div class="bg-white rounded-xl shadow-md p-6">
+
+          <h2 class="text-lg font-semibold mb-2">
+            Manage Salespeople
+          </h2>
+
+          <p class="text-gray-500 mb-4">
+            View and manage existing salespeople.
+          </p>
+
+          <div class="space-y-3 max-h-80 overflow-y-auto pr-2">
+            <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg"
+              *ngFor="let user of users.filter(u => u.role !== 'Manager')">
+              <div class="flex items-center gap-3">
+                <img class="w-10 h-10 rounded-full" [src]="user.avatar_url || 'https://picsum.photos/40'">
+                <div class="flex flex-col">
+                  <span>{{ user.name }}</span>
+                  <span class="text-xs text-gray-500">{{ user.email }}</span>
+                </div>
+              </div>
+              <div class="flex gap-2">
+                <button class="text-blue-500 hover:text-blue-700 cursor-pointer" (click)="openEditModal(user)">
+                  <i class="pi pi-pencil"></i>
+                </button>
+                <button class="text-red-500 hover:text-red-700 cursor-pointer" (click)="deleteSalesperson(user)">
+                  <i class="pi pi-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- EDIT SALESPERSON MODAL -->
+          <p-dialog header="Edit Salesperson" [(visible)]="editModalVisible" [modal]="true"
+            [style]="{ width: '25rem' }">
+            <div class="flex flex-col gap-4">
+              <input type="text" class="border rounded-lg p-2" [(ngModel)]="editSalespersonName" placeholder="Name">
+              <input type="email" class="border rounded-lg p-2" [(ngModel)]="editSalespersonEmail" placeholder="Email">
+            </div>
+            <div class="flex justify-end gap-2 mt-6">
+              <p-button label="Cancel" severity="secondary" (click)="editModalVisible = false" />
+              <p-button label="Save" severity="primary" (click)="saveSalespersonEdit()"
+                [disabled]="!editSalespersonName || !editSalespersonEmail" />
+            </div>
+          </p-dialog>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div *ngIf="currentTab=='REPORTS'">
+
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+        <!-- REPORTS PANEL -->
+        <div class="bg-white rounded-xl shadow-md p-6 col-span-1 xl:col-span-2 text-center">
+
+          <div class="flex flex-col items-center justify-center py-10">
+
+            <i class="pi pi-chart-bar text-5xl text-blue-500 mb-4"></i>
+
+            <h2 class="text-2xl font-semibold mb-2">
+              Reports Module
+            </h2>
+
+            <p class="text-gray-500 mb-4 max-w-md">
+              This section is currently under construction. Soon you'll be able to view sales analytics, performance
+              reports, and detailed insights here.
+            </p>
+
+            <span class="px-4 py-2 bg-yellow-100 text-yellow-700 rounded-lg text-sm font-medium">
+              🚧 Under Construction
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div *ngIf="currentTab=='AREAS'">
+
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+        <!-- ADD AREA -->
+        <div class="bg-white rounded-xl shadow-md p-6">
+
+          <h2 class="text-lg font-semibold mb-2 flex items-center gap-2">
+            <i class="pi pi-plus-circle"></i>
+            Add New Area
+          </h2>
+
+          <p class="text-gray-500 mb-4">
+            Register a new area to organize your sales floor.
+          </p>
+
+          <div class="flex flex-col gap-2">
+            <input type="text" placeholder="e.g. New Cars" class="border rounded-lg p-2" [(ngModel)]="newAreaName">
+
+            <textarea placeholder="Description" class="border rounded-lg p-2 min-h-24" [(ngModel)]="newAreaDescription">
+        </textarea>
+
+            <button
+              class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer mt-2"
+              (click)="addArea()">
+              <i class="pi pi-plus"></i>
+              Add
+            </button>
+          </div>
+
+        </div>
+
+        <!-- MANAGE AREAS -->
+        <div class="bg-white rounded-xl shadow-md p-6">
+
+          <h2 class="text-lg font-semibold mb-2">
+            Manage Areas
+          </h2>
+
+          <p class="text-gray-500 mb-4">
+            View and manage existing areas.
+          </p>
+
+          <div class="space-y-3 max-h-80 overflow-y-auto pr-2">
+
+            <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg" *ngFor="let area of areas">
+
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                  <i class="pi pi-building"></i>
+                </div>
+
+                <div class="flex flex-col">
+                  <span class="font-medium">{{ area.name }}</span>
+                  <span class="text-xs text-gray-500">
+                    {{ area.description || 'No description' }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="flex gap-2">
+                <button class="text-blue-500 hover:text-blue-700 cursor-pointer" (click)="openEditAreaModal(area)">
+                  <i class="pi pi-pencil"></i>
+                </button>
+
+                <button class="text-red-500 hover:text-red-700 cursor-pointer" (click)="deleteArea(area)">
+                  <i class="pi pi-trash"></i>
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- EDIT AREA MODAL -->
+          <p-dialog header="Edit Area" [(visible)]="editAreaModalVisible" [modal]="true" [style]="{ width: '25rem' }">
+
+            <div class="flex flex-col gap-4">
+              <input type="text" class="border rounded-lg p-2" [(ngModel)]="editAreaName" placeholder="Area name">
+
+              <textarea class="border rounded-lg p-2 min-h-24" [(ngModel)]="editAreaDescription"
+                placeholder="Description">
+          </textarea>
+            </div>
+
+            <div class="flex justify-end gap-2 mt-6">
+              <p-button label="Cancel" severity="secondary" (click)="editAreaModalVisible = false" />
+
+              <p-button label="Save" severity="primary" (click)="saveAreaEdit()" [disabled]="!editAreaName" />
+            </div>
+
+          </p-dialog>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- SALES CALENDAR TAB -->
+    <div *ngIf="currentTab=='SALES_CALENDAR'">
+
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+        <!-- ADD -->
+        <div class="bg-white rounded-xl shadow-md p-6">
+
+          <h2 class="text-lg font-semibold mb-2 flex items-center gap-2">
+            <i class="pi pi-calendar-plus"></i>
+            Add Sales Calendar
+          </h2>
+
+          <p class="text-gray-500 mb-4">
+            Assign a salesperson to an area for a specific date.
+          </p>
+
+          <div class="flex flex-col gap-3">
+
+            <input type="date" class="border rounded-lg p-2" [(ngModel)]="newSalesCalendarDate">
+
+            <select class="border rounded-lg p-2" [(ngModel)]="newSalesCalendarAreaId">
+              <option value="">Select area</option>
+              <option *ngFor="let area of areas" [value]="area.id">
+                {{ area.name }}
+              </option>
+            </select>
+
+            <select class="border rounded-lg p-2" [(ngModel)]="newSalesCalendarSalespersonId">
+              <option value="">Select salesperson</option>
+              <option *ngFor="let user of users" [value]="user.id">
+                {{ user.name }}
+              </option>
+            </select>
+
+            <button
+              class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer mt-2"
+              (click)="addSalesCalendar()">
+              <i class="pi pi-plus"></i>
+              Add
+            </button>
+
+          </div>
+
+        </div>
+
+        <!-- MANAGE -->
+        <div class="bg-white rounded-xl shadow-md p-6">
+
+          <h2 class="text-lg font-semibold mb-2">
+            Manage Sales Calendar
+          </h2>
+          <app-calendar [env]="env"></app-calendar>
+          <!-- <button
+            class="mb-6 flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 cursor-pointer"
+            (click)="toggleWeekCalendar()">
+            <i class="pi pi-calendar"></i>
+            {{ showWeekCalendar ? 'Hide Weekly Calendar' : 'Show Weekly Calendar' }}
+          </button> -->
+          <div *ngIf="showWeekCalendar" class="bg-white rounded-xl shadow-md p-6 mb-6">
+
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+
+              <div>
+                <h2 class="text-xl font-semibold text-gray-800">
+                  Weekly Sales Calendar
+                </h2>
+
+                <p class="text-gray-500">
+                  Sales calendar grouped by area from Monday to Sunday.
+                </p>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <p-datepicker [(ngModel)]="selectedCalendarDate" dateFormat="yy-mm-dd" [showIcon]="true"
+                  (onSelect)="onCalendarDateChange()">
+                </p-datepicker>
+              </div>
+
+            </div>
+
+            <div class="overflow-x-auto">
+
+              <table class="w-full border-collapse min-w-[900px]">
+
+                <thead>
+                  <tr>
+                    <th class="border bg-gray-100 p-3 text-left text-sm font-semibold text-gray-700">
+                      Area
+                    </th>
+
+                    <th *ngFor="let day of weekDays"
+                      class="border bg-gray-100 p-3 text-center text-sm font-semibold text-gray-700">
+
+                      <div>{{ day.label }}</div>
+                      <div class="text-xs text-gray-500">{{ day.date }}</div>
+
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody>
+
+                  <tr *ngFor="let area of areas">
+
+                    <td class="border p-3 font-semibold text-gray-800 bg-gray-50">
+                      {{ area.name }}
+                    </td>
+
+                    <td *ngFor="let day of weekDays" class="border p-3 align-top min-h-24">
+
+                      <div *ngIf="getSalesCalendarByAreaAndDate(area.id, day.date).length === 0"
+                        class="text-xs text-gray-400 text-center py-4">
+                        No records
+                      </div>
+
+                      <div *ngFor="let item of getSalesCalendarByAreaAndDate(area.id, day.date)"
+                        class="bg-blue-50 border border-blue-100 rounded-lg p-2 mb-2">
+
+                        <div class="flex items-center gap-2">
+                          <i class="pi pi-user text-blue-600 text-xs"></i>
+
+                          <span class="text-sm font-medium text-gray-800">
+                            {{ getSalespersonName(item.salesperson_id) }}
+                          </span>
+                        </div>
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+
+                </tbody>
+
+              </table>
+
+            </div>
+
+          </div>
+
+          <p class="text-gray-500 mb-4">
+            View and manage scheduled assignments.
+          </p>
+
+          <div class="space-y-3 max-h-80 overflow-y-auto pr-2">
+
+            <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg"
+              *ngFor="let item of salesCalendars">
+
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                  <i class="pi pi-calendar"></i>
+                </div>
+
+                <div class="flex flex-col">
+                  <span class="font-medium">
+                    {{ getSalespersonName(item.salesperson_id) }}
+                  </span>
+
+                  <span class="text-xs text-gray-500">
+                    {{ item.date }} · {{ getAreaName(item.area_id) }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="flex gap-2">
+                <button class="text-blue-500 hover:text-blue-700 cursor-pointer"
+                  (click)="openEditSalesCalendarModal(item)">
+                  <i class="pi pi-pencil"></i>
+                </button>
+
+                <button class="text-red-500 hover:text-red-700 cursor-pointer" (click)="deleteSalesCalendar(item)">
+                  <i class="pi pi-trash"></i>
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- EDIT MODAL -->
+          <p-dialog header="Edit Sales Calendar" [(visible)]="editSalesCalendarModalVisible" [modal]="true"
+            [style]="{ width: '25rem' }">
+
+            <div class="flex flex-col gap-4">
+
+              <input type="date" class="border rounded-lg p-2" [(ngModel)]="editSalesCalendarDate">
+
+              <select class="border rounded-lg p-2" [(ngModel)]="editSalesCalendarAreaId">
+                <option value="">Select area</option>
+                <option *ngFor="let area of areas" [value]="area.id">
+                  {{ area.name }}
+                </option>
+              </select>
+
+              <select class="border rounded-lg p-2" [(ngModel)]="editSalesCalendarSalespersonId">
+                <option value="">Select salesperson</option>
+                <option *ngFor="let user of users" [value]="user.id">
+                  {{ user.name }}
+                </option>
+              </select>
+
+            </div>
+
+            <div class="flex justify-end gap-2 mt-6">
+              <p-button label="Cancel" severity="secondary" (click)="editSalesCalendarModalVisible = false" />
+
+              <p-button label="Save" severity="primary" (click)="saveSalesCalendarEdit()"
+                [disabled]="!editSalesCalendarDate || !editSalesCalendarAreaId || !editSalesCalendarSalespersonId" />
+            </div>
+
+          </p-dialog>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+<p-toast />

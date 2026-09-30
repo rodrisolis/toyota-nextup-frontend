@@ -1,0 +1,225 @@
+<div class="flex items-center gap-2 text-gray-600 mb-6">
+  <i class="pi pi-bolt text-lg"></i>
+  <h2 class="text-xl font-semibold">
+    Live Floor Status
+    <!-- <app-calendar></app-calendar> -->
+  </h2>
+</div>
+
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+
+  <section *ngFor="let branch of branches" class="bg-gray-50 rounded-2xl p-5 border border-gray-200">
+
+    <div class="flex items-center justify-between mb-5">
+      <h3 class="text-xl font-bold text-gray-800">
+        {{ branch.title }}
+      </h3>
+
+      <!-- <span class="text-xs px-3 py-1 rounded-full bg-white border text-gray-500">
+        {{ branch.databaseName }}
+      </span> -->
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- CURRENTLY ON FLOOR - OCUPA 2 COLUMNAS -->
+      <div class="md:col-span-2 bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center gap-4">
+
+        <div class="flex items-center gap-2 text-gray-700 font-semibold">
+          <i class="pi pi-bolt text-red-500"></i>
+          <span>Currently on Floor</span>
+        </div>
+
+        <ng-container *ngIf="branch.currentUser; else noCurrentFloor">
+
+          <img class="w-24 h-24 rounded-full object-cover border"
+            [src]="branch.currentUser.avatar_url || 'https://picsum.photos/100'">
+
+          <h4 class="font-semibold text-gray-800 text-lg">
+            {{ branch.currentUser.name }}
+          </h4>
+
+          <span class="text-sm text-gray-500 flex items-center gap-1">
+            <i class="pi pi-user text-xs"></i>
+            Salesperson
+          </span>
+
+          <button
+            class="flex items-center gap-2 px-4 py-2 border border-red-500 text-red-600 rounded-lg hover:bg-red-50 transition cursor-pointer"
+            (click)="sendToCustomer(branch)">
+            <i class="pi pi-users"></i>
+            With Customer
+          </button>
+
+        </ng-container>
+
+        <ng-template #noCurrentFloor>
+          <div class="py-8">
+            <p class="text-gray-500">
+              No one is on the floor.
+            </p>
+          </div>
+        </ng-template>
+
+      </div>
+
+      <!-- SALESPERSON WITH CUSTOMER -->
+      <div class="bg-white rounded-xl shadow-md p-4 sm:p-6 flex flex-col gap-4 min-w-0">
+
+        <div class="flex items-center gap-2 text-gray-700 font-semibold min-w-0">
+          <i class="pi pi-users text-green-600 flex-shrink-0"></i>
+          <span class="break-words" pTooltip="Salesperson with Customer" tooltipPosition="top">Salesperson with Customer</span>
+        </div>
+
+        <ng-container *ngIf="branch.withCustomers.length > 0; else noneWithCustomer">
+
+          <div class="bg-gray-50 p-3 rounded-lg flex flex-col gap-3 w-full"
+            *ngFor="let item of branch.withCustomers; index as i">
+
+            <!-- INFO -->
+            <div class="flex items-center gap-3 w-full min-w-0">
+
+              <span
+                class="w-7 h-7 flex-shrink-0 flex items-center justify-center rounded-full bg-white border text-sm font-bold text-gray-600">
+                {{ i + 1 }}
+              </span>
+
+              <img class="w-10 h-10 flex-shrink-0 rounded-full object-cover"
+                [src]="getUserById(branch, item.salesperson_id)?.avatar_url || 'https://picsum.photos/50'">
+
+              <div class="flex-1 min-w-0">
+                <strong class="block text-gray-800 truncate" [pTooltip]="getUserById(branch, item.salesperson_id)?.name" tooltipPosition="top">
+                  {{ getUserById(branch, item.salesperson_id)?.name || '...' }}
+                </strong>
+              </div>
+
+            </div>
+
+            <!-- BUTTON -->
+            <button
+              class="w-full h-10 flex items-center justify-center gap-2 text-sm border border-green-500 text-green-600 rounded-md hover:bg-green-50 transition cursor-pointer"
+              (click)="finishCustomer(branch, item)">
+              <i class="pi pi-check"></i>
+              Served
+            </button>
+
+          </div>
+
+        </ng-container>
+
+        <ng-template #noneWithCustomer>
+          <p class="text-gray-500 text-center py-6 text-sm sm:text-base">
+            No one is with a customer.
+          </p>
+        </ng-template>
+
+      </div>
+
+      <!-- WAITING QUEUE -->
+      <div class="bg-white rounded-xl shadow-md p-4 sm:p-6 flex flex-col gap-4 min-w-0">
+
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+
+          <div class="flex items-center gap-2 text-gray-700 font-semibold min-w-0">
+            <i class="pi pi-list shrink-0"></i>
+            <span class="truncate" pTooltip="Waiting Queue" tooltipPosition="top">Waiting Queue</span>
+          </div>
+
+          <button
+            class="w-full sm:w-auto flex items-center justify-center gap-1 px-3 py-2 sm:py-1 text-sm border border-red-500 text-red-600 rounded-md hover:bg-red-50 transition cursor-pointer"
+            (click)="branch.visible = true">
+            <i class="pi pi-plus"></i>
+            Add
+          </button>
+
+        </div>
+
+        <ng-container *ngIf="branch.queue.length > 0; else emptyQueue">
+
+          <div class="bg-gray-50 p-3 rounded-lg flex flex-col gap-3"
+            *ngFor="let user of branch.queue; index as i; trackBy: trackByQueueId">
+
+            <!-- FILA 1: INFO -->
+            <div class="flex items-center gap-3 min-w-0">
+
+              <span
+                class="w-7 h-7 flex items-center justify-center rounded-full bg-white border text-sm font-bold text-gray-600 flex-shrink-0">
+                {{ i + 1 }}
+              </span>
+
+              <img class="w-10 h-10 rounded-full object-cover flex-shrink-0"
+                [src]="user.avatar_url || 'https://picsum.photos/50'">
+
+              <div class="min-w-0 flex-1">
+                <strong class="block text-gray-800 truncate" [pTooltip]="user.name" tooltipPosition="top">
+                  {{ user.name }}
+                </strong>
+              </div>
+
+            </div>
+
+            <!-- FILA 2: BOTONES -->
+            <div class="grid grid-cols-4 gap-2">
+
+              <button class="h-10 flex items-center justify-center border rounded hover:bg-gray-100 cursor-pointer"
+                (click)="sendQueueToCustomer(branch, user)">
+                <i class="pi pi-users"></i>
+              </button>
+
+              <button class="h-10 flex items-center justify-center border rounded hover:bg-gray-100 cursor-pointer"
+                (click)="removeQueueEntry(branch, user)">
+                <i class="pi pi-times"></i>
+              </button>
+
+              <button *ngIf="isAdmin && router.url === '/dashboard'"
+                class="h-10 flex items-center justify-center border rounded hover:bg-gray-100 cursor-pointer"
+                (click)="moveQueueEntry(branch, user, 'up')">
+                <i class="pi pi-arrow-up"></i>
+              </button>
+
+              <button *ngIf="isAdmin && router.url === '/dashboard'"
+                class="h-10 flex items-center justify-center border rounded hover:bg-gray-100 cursor-pointer"
+                (click)="moveQueueEntry(branch, user, 'down')">
+                <i class="pi pi-arrow-down"></i>
+              </button>
+
+            </div>
+
+          </div>
+
+        </ng-container>
+
+        <ng-template #emptyQueue>
+          <p class="text-gray-500 text-center py-6 text-sm sm:text-base">
+            Waiting queue is empty.
+          </p>
+        </ng-template>
+
+      </div>
+
+    </div>
+
+    <!-- DIALOG POR SUCURSAL -->
+    <p-dialog header="Add Salesperson to Queue" [(visible)]="branch.visible" [modal]="true"
+      [style]="{ width: '25rem' }">
+
+      <div class="flex items-center gap-4 mb-4">
+
+        <p-select [options]="branch.availableUsers" [(ngModel)]="branch.selectedUser" optionLabel="name"
+          placeholder="Select a salesperson" class="w-full" appendTo="body" />
+
+      </div>
+
+      <div class="flex justify-end gap-2 mt-8">
+
+        <p-button label="Cancel" severity="secondary" (click)="branch.visible = false" />
+
+        <p-button label="Add" severity="danger" (click)="addToQueue(branch, branch.selectedUser)" />
+
+      </div>
+
+    </p-dialog>
+
+  </section>
+
+</div>

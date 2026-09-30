@@ -1,0 +1,195 @@
+<div class="flex items-center gap-2 text-gray-600">
+  <i class="pi pi-bolt text-lg"></i>
+  <h2 class="text-xl font-semibold">
+    Live Floor Status
+  </h2>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+  <!-- CARD 1 -->
+  <ng-container *ngIf="currentShift; else noCurrent">
+
+    <div class="bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center gap-4">
+
+      <div class="flex items-center gap-2 text-gray-700 font-semibold">
+        <i class="pi pi-clock text-red-500"></i>
+        <span>Currently on Floor</span>
+      </div>
+
+      <div *ngIf="currentUser" class="flex flex-col items-center gap-2">
+
+        <img class="w-20 h-20 rounded-full object-cover border"
+          [src]="currentUser.avatar_url || 'https://picsum.photos/80'">
+
+        <h4 class="font-semibold text-gray-800">
+          {{ currentUser.name }}
+        </h4>
+
+        <span class="text-sm text-gray-500 flex items-center gap-1">
+          <i class="pi pi-user text-xs"></i>
+          Salesperson
+        </span>
+
+      </div>
+
+      <div class="text-4xl font-bold text-red-600">
+        {{ remainingTime }}
+      </div>
+
+      <p class="text-sm text-gray-500">
+        Time Remaining
+      </p>
+
+      <button
+        class="flex items-center gap-2 px-4 py-2 border border-red-500 text-red-600 rounded-lg hover:bg-blue-50 transition cursor-pointer"
+        (click)="sendToCustomer()">
+        <i class="pi pi-users"></i>
+        With Customer
+      </button>
+
+    </div>
+
+  </ng-container>
+
+  <!-- NO CURRENT -->
+  <ng-template #noCurrent>
+
+    <div class="bg-white rounded-xl shadow-md p-6 flex flex-col items-center justify-center text-center gap-2">
+
+      <div class="flex items-center gap-2 text-gray-700 font-semibold">
+        <i class="pi pi-clock"></i>
+        <span>Currently on Floor</span>
+      </div>
+
+      <p class="text-gray-500">
+        No one is on the floor.
+      </p>
+
+    </div>
+
+  </ng-template>
+
+  <!-- CARD 2 -->
+  <div class="bg-white rounded-xl shadow-md p-6 flex flex-col gap-4">
+
+    <div class="flex items-center gap-2 text-gray-700 font-semibold">
+      <i class="pi pi-users text-green-600"></i>
+      <span>Salesperson with Customer</span>
+    </div>
+
+    <ng-container *ngIf="withCustomers.length > 0; else noneWith">
+
+      <div class="flex items-center gap-3 bg-gray-50 p-3 rounded-lg" *ngFor="let item of withCustomers; index as i">
+
+        <span class="w-6 text-center font-bold text-gray-600">
+          {{ i + 1 }}
+        </span>
+
+        <img class="w-10 h-10 rounded-full object-cover"
+          [src]="users.find(u=>u.id===item.salesperson_id)?.avatar_url || 'https://picsum.photos/50'">
+
+        <div class="flex-1">
+          <strong class="text-gray-800">
+            {{ users.find(u=>u.id===item.salesperson_id)?.name || '...' }}
+          </strong>
+        </div>
+
+        <button
+          class="flex items-center gap-1 text-sm px-3 py-1 border border-green-500 text-green-600 rounded-md hover:bg-green-50 transition cursor-pointer"
+          (click)="finishCustomer(item)">
+          <i class="pi pi-check"></i>
+          Served
+        </button>
+
+      </div>
+
+    </ng-container>
+
+    <ng-template #noneWith>
+
+      <p class="text-gray-500 text-center py-6">
+        No one is with a customer.
+      </p>
+
+    </ng-template>
+
+  </div>
+
+  <!-- CARD 3 -->
+  <div class="bg-white rounded-xl shadow-md p-6 flex flex-col gap-4">
+
+    <div class="flex justify-between items-center">
+
+      <div class="flex items-center gap-2 text-gray-700 font-semibold">
+        <i class="pi pi-list"></i>
+        <span>Waiting Queue</span>
+      </div>
+
+      <button
+        class="flex items-center gap-1 px-3 py-1 text-sm border border-red-500 text-red-600 rounded-md hover:bg-blue-50 transition cursor-pointer"
+        (click)="visible = true">
+        <i class="pi pi-plus"></i>
+        Add
+      </button>
+
+    </div>
+
+    <div class="flex items-center gap-3 bg-gray-50 p-3 rounded-lg" *ngFor="let user of queue; index as i">
+
+      <span class="w-6 text-center font-bold text-gray-600">
+        {{ i + 1 }}
+      </span>
+
+      <img class="w-10 h-10 rounded-full object-cover" [src]="user.avatar_url">
+
+      <div class="flex-1">
+        <strong class="text-gray-800">
+          {{ user.name }}
+        </strong>
+      </div>
+
+      <div class="flex gap-1">
+
+        <button class="p-1 border rounded hover:bg-gray-100 cursor-pointer" (click)="sendQueueToCustomer(user)">
+          <i class="pi pi-users"></i>
+        </button>
+
+        <button class="p-1 border rounded hover:bg-gray-100 cursor-pointer" (click)="removeQueueEntry(user)">
+          <i class="pi pi-times"></i>
+        </button>
+
+        <button class="p-1 border rounded hover:bg-gray-100 cursor-pointer" *ngIf="isAdmin && router.url === '/dashboard'"
+          (click)="moveQueueEntry(user,'up')">
+          <i class="pi pi-arrow-up"></i>
+        </button>
+
+        <button class="p-1 border rounded hover:bg-gray-100 cursor-pointer" *ngIf="isAdmin && router.url === '/dashboard'"
+          (click)="moveQueueEntry(user,'down')">
+          <i class="pi pi-arrow-down"></i>
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- DIALOG -->
+<p-dialog header="Add Salesperson to Queue" [(visible)]="visible" [modal]="true" [style]="{ width: '25rem' }">
+
+  <div class="flex items-center gap-4 mb-4">
+
+    <p-select [options]="availableUsers" [(ngModel)]="selectedUser" optionLabel="name" placeholder="Select a salesperson"
+      class="w-full" appendTo="body" />
+
+  </div>
+
+  <div class="flex justify-end gap-2 mt-8">
+    <p-button label="Cancel" severity="secondary" (click)="visible = false" />
+    <p-button label="Add" severity="danger" (click)="addToQueue(selectedUser)" />
+  </div>
+
+</p-dialog>

@@ -1,0 +1,96 @@
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+    <!-- ADD AREA -->
+    <div class="bg-white rounded-xl shadow-md p-6">
+
+        <h2 class="text-lg font-semibold mb-2 flex items-center gap-2">
+            <i class="pi pi-plus-circle"></i>
+            Add New Area
+        </h2>
+
+        <p class="text-gray-500 mb-4">
+            Register a new area to organize your sales floor.
+        </p>
+
+        <div class="flex flex-col gap-2">
+            <input type="text" placeholder="e.g. New Cars" class="border rounded-lg p-2" [(ngModel)]="newAreaName">
+
+            <textarea placeholder="Description" class="border rounded-lg p-2 min-h-24" [(ngModel)]="newAreaDescription">
+        </textarea>
+
+            <button
+                class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer mt-2"
+                (click)="addArea()">
+                <i class="pi pi-plus"></i>
+                Add
+            </button>
+        </div>
+
+    </div>
+
+    <!-- MANAGE AREAS -->
+    <div class="bg-white rounded-xl shadow-md p-6">
+
+        <h2 class="text-lg font-semibold mb-2">
+            Manage Areas
+        </h2>
+
+        <p class="text-gray-500 mb-4">
+            View and manage existing areas.
+        </p>
+
+        <div class="space-y-3 max-h-80 overflow-y-auto pr-2">
+
+            <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg" *ngFor="let area of areas">
+
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                        <i class="pi pi-building"></i>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <span class="font-medium">{{ area.name }}</span>
+                        <span class="text-xs text-gray-500">
+                            {{ area.description || 'No description' }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="flex gap-2">
+                    <button class="text-blue-500 hover:text-blue-700 cursor-pointer" (click)="openEditAreaModal(area)">
+                        <i class="pi pi-pencil"></i>
+                    </button>
+
+                    <button class="text-red-500 hover:text-red-700 cursor-pointer" (click)="deleteArea(area)">
+                        <i class="pi pi-trash"></i>
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- EDIT AREA MODAL -->
+        <p-dialog header="Edit Area" [(visible)]="editAreaModalVisible" [modal]="true" [style]="{ width: '25rem' }">
+
+            <div class="flex flex-col gap-4">
+                <input type="text" class="border rounded-lg p-2" [(ngModel)]="editAreaName" placeholder="Area name">
+
+                <textarea class="border rounded-lg p-2 min-h-24" [(ngModel)]="editAreaDescription"
+                    placeholder="Description">
+          </textarea>
+            </div>
+
+            <div class="flex justify-end gap-2 mt-6">
+                <p-button label="Cancel" severity="secondary" (click)="editAreaModalVisible = false" />
+
+                <p-button label="Save" severity="primary" (click)="saveAreaEdit()" [disabled]="!editAreaName" />
+            </div>
+
+        </p-dialog>
+
+    </div>
+
+</div>
+
+<p-toast />

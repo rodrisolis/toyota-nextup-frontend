@@ -1,0 +1,29 @@
+<!-- <div class="bg-white rounded-xl shadow-md p-6 flex flex-col gap-4 mt-8">
+  <div class="flex items-center gap-2 text-gray-700 font-semibold mb-2">
+    <i class="pi pi-history text-blue-600"></i>
+    <span>Salesperson With Customer History</span>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="min-w-full text-sm text-left">
+      <thead>
+        <tr>
+          <th class="px-4 py-2">#</th>
+          <th class="px-4 py-2">Name</th>
+          <th class="px-4 py-2">Entry Time</th>
+          <th class="px-4 py-2">Exit Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let h of withCustomerHistory; index as i">
+          <td class="px-4 py-2">{{ i + 1 }}</td>
+          <td class="px-4 py-2">{{ users.find(u => u.id === h.salesperson_id)?.name || '...' }}</td>
+          <td class="px-4 py-2">{{ h.entry | date:'short' }}</td>
+          <td class="px-4 py-2">{{ h.exit | date:'short' }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="withCustomerHistory.length === 0" class="text-gray-500 text-center py-4">
+      No history yet.
+    </div>
+  </div>
+</div> -->

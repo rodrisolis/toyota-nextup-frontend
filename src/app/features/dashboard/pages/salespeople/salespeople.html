@@ -1,0 +1,78 @@
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+  <!-- ADD -->
+  <div class="bg-white rounded-xl shadow-md p-6">
+
+    <h2 class="text-lg font-semibold mb-2 flex items-center gap-2">
+      <i class="pi pi-user-plus"></i>
+      Add New Salesperson
+    </h2>
+
+    <p class="text-gray-500 mb-4">
+      Register a new salesperson to the system.
+    </p>
+
+
+    <div class="flex flex-col gap-2">
+      <input type="text" placeholder="e.g. John Doe" class="border rounded-lg p-2" [(ngModel)]="newSalespersonName">
+      <input type="email" placeholder="e.g. john@example.com" class="border rounded-lg p-2"
+        [(ngModel)]="newSalespersonEmail">
+      <button
+        class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer mt-2"
+        (click)="addSalesperson()">
+        <i class="pi pi-plus"></i>
+        Add
+      </button>
+    </div>
+
+  </div>
+
+  <!-- MANAGE -->
+  <div class="bg-white rounded-xl shadow-md p-6">
+
+    <h2 class="text-lg font-semibold mb-2">
+      Manage Salespeople
+    </h2>
+
+    <p class="text-gray-500 mb-4">
+      View and manage existing salespeople.
+    </p>
+
+    <div class="space-y-3 max-h-80 overflow-y-auto pr-2">
+      <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg"
+        *ngFor="let user of users.filter(u => u.role !== 'Manager')">
+        <div class="flex items-center gap-3">
+          <img class="w-10 h-10 rounded-full" [src]="user.avatar_url || 'https://picsum.photos/40'">
+          <div class="flex flex-col">
+            <span>{{ user.name }}</span>
+            <span class="text-xs text-gray-500">{{ user.email }}</span>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <button class="text-blue-500 hover:text-blue-700 cursor-pointer" (click)="openEditModal(user)">
+            <i class="pi pi-pencil"></i>
+          </button>
+          <button class="text-red-500 hover:text-red-700 cursor-pointer" (click)="deleteSalesperson(user)">
+            <i class="pi pi-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- EDIT SALESPERSON MODAL -->
+    <p-dialog header="Edit Salesperson" [(visible)]="editModalVisible" [modal]="true" [style]="{ width: '25rem' }">
+      <div class="flex flex-col gap-4">
+        <input type="text" class="border rounded-lg p-2" [(ngModel)]="editSalespersonName" placeholder="Name">
+        <input type="email" class="border rounded-lg p-2" [(ngModel)]="editSalespersonEmail" placeholder="Email">
+      </div>
+      <div class="flex justify-end gap-2 mt-6">
+        <p-button label="Cancel" severity="secondary" (click)="editModalVisible = false" />
+        <p-button label="Save" severity="primary" (click)="saveSalespersonEdit()"
+          [disabled]="!editSalespersonName || !editSalespersonEmail" />
+      </div>
+    </p-dialog>
+
+  </div>
+
+</div>
+
+<p-toast />

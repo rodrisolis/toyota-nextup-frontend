@@ -1,0 +1,152 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "cli": {
+    "packageManager": "npm",
+    "analytics": false
+  },
+  "newProjectRoot": "projects",
+  "projects": {
+    "salesfloorscheduler": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss",
+          "standalone": false
+        },
+        "@schematics/angular:directive": {
+          "standalone": false
+        },
+        "@schematics/angular:pipe": {
+          "standalone": false
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "src/main.ts",
+            "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
+            "styles": [
+              "src/styles.scss"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "1MB",
+                  "maximumError": "2MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            },
+            "dalton-production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/app/environments/environment.ts",
+                  "with": "src/app/environments/environment.dalton.prod.ts"
+                }
+              ]
+            },
+            "dalton-qa": {
+              "fileReplacements": [
+                {
+                  "replace": "src/app/environments/environment.ts",
+                  "with": "src/app/environments/environment.dalton.qa.ts"
+                }
+              ]
+            },
+            "toyota-north-production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/app/environments/environment.ts",
+                  "with": "src/app/environments/environment.toyota.north.prod.ts"
+                }
+              ]
+            },
+            "toyota-north-qa": {
+              "fileReplacements": [
+                {
+                  "replace": "src/app/environments/environment.ts",
+                  "with": "src/app/environments/environment.toyota.north.qa.ts"
+                }
+              ]
+            },
+            "toyota-south-production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/app/environments/environment.ts",
+                  "with": "src/app/environments/environment.toyota.south.prod.ts"
+                }
+              ]
+            },
+            "toyota-south-qa": {
+              "fileReplacements": [
+                {
+                  "replace": "src/app/environments/environment.ts",
+                  "with": "src/app/environments/environment.toyota.south.qa.ts"
+                }
+              ]
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "salesfloorscheduler:build:production"
+            },
+            "development": {
+              "buildTarget": "salesfloorscheduler:build:development"
+            },
+            "toyota-south-qa": {
+              "buildTarget": "salesfloorscheduler:build:toyota-south-qa"
+            },
+            "toyota-south-production": {
+              "buildTarget": "salesfloorscheduler:build:toyota-south-production"
+            },
+            "toyota-north-qa": {
+              "buildTarget": "salesfloorscheduler:build:toyota-north-qa"
+            },
+            "toyota-north-production": {
+              "buildTarget": "salesfloorscheduler:build:toyota-north-production"
+            },
+            "dalton-qa": {
+              "buildTarget": "salesfloorscheduler:build:dalton-qa"
+            },
+            "dalton-production": {
+              "buildTarget": "salesfloorscheduler:build:dalton-production"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test"
+        }
+      }
+    }
+  }
+}

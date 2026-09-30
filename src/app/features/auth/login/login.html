@@ -1,0 +1,106 @@
+<div class="min-h-screen w-full flex items-center justify-center bg-gray-100 px-4">
+
+  <!-- LOGIN CARD -->
+  <div class="w-full max-w-md bg-white shadow-lg rounded-xl p-8">
+
+    <!-- LOGO -->
+    <div class="flex justify-center mb-6">
+      <img
+        class="h-12 object-contain"
+        src="https://vcard.daltoncorp.com/app/assets/images/logos/logo-dalton-us.png"
+        alt="Dalton Logo"
+      >
+    </div>
+
+    <!-- TITLE -->
+    <div class="text-center mb-6">
+      <h2 class="text-2xl font-bold text-gray-800">
+        Welcome Back
+      </h2>
+
+      <p class="text-gray-500 text-sm">
+        Select your account to sign in
+      </p>
+    </div>
+
+
+    <!-- FORM -->
+    <div class="space-y-4">
+
+      <!-- USER SELECT -->
+      <!-- <div>
+
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          User Profile
+        </label>
+
+        <div class="relative">
+
+          <i class="pi pi-user absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+
+          <select
+            class="w-full border rounded-lg pl-10 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+            [(ngModel)]="selectedUser"
+          >
+            <option *ngFor="let user of usuarios" [ngValue]="user">
+              {{ user.name }}
+            </option>
+          </select>
+
+        </div>
+
+      </div> -->
+
+
+      <!-- PASSWORD -->
+      <!-- <div>
+
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          Password
+        </label>
+
+        <div class="relative">
+
+          <i class="pi pi-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+
+          <input
+            type="password"
+            placeholder="1234"
+            [(ngModel)]="password"
+            class="w-full border rounded-lg pl-10 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+          >
+
+        </div>
+
+      </div> -->
+
+
+      <!-- BUTTON -->
+      <!-- <button
+        (click)="login()"
+        [disabled]="password === ''"
+        class="w-full flex items-center justify-center gap-2 mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition"
+      >
+
+        <i class="pi pi-sign-in"></i>
+
+        Sign In
+
+      </button> -->
+            <button type="button" (click)="loginMS()"
+          class="cursor-pointer w-full h-12 rounded-xl border border-gray-200 flex items-center justify-center gap-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 hover:-translate-y-0.5 active:scale-95">
+          <div class="grid grid-cols-2 gap-1">
+            <span class="w-2.5 h-2.5 bg-red-500"></span>
+            <span class="w-2.5 h-2.5 bg-green-500"></span>
+            <span class="w-2.5 h-2.5 bg-blue-500"></span>
+            <span class="w-2.5 h-2.5 bg-yellow-500"></span>
+          </div>
+          Continue with Microsoft
+        </button>
+
+    </div>
+
+  </div>
+
+</div>
+<p-toast />
