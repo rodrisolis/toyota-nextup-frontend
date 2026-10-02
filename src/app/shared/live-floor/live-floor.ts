@@ -8,7 +8,6 @@ import {
 
 import { FirestoreService } from '../../services/firestore';
 import { collection, Firestore, onSnapshot, orderBy, query } from 'firebase/firestore';
-// import { db } from '../../firebase.config';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
@@ -169,7 +168,6 @@ export class LiveFloor implements OnInit, OnDestroy {
   }
 
   async loadActiveShift() {
-    // Mientras se está cerrando un turno, ignoramos recargas momentáneas
     if (this.isProcessingShiftEnd) {
       return;
     }
@@ -191,7 +189,6 @@ export class LiveFloor implements OnInit, OnDestroy {
       return;
     }
 
-    // Si ese shift justo se está cerrando, no lo revivas en UI
     if (this.closingShiftId && shift.id === this.closingShiftId) {
       return;
     }
